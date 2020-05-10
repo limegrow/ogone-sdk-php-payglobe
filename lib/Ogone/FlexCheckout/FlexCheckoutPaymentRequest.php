@@ -7,9 +7,9 @@ use Ogone\ShaComposer\ShaComposer;
 
 class FlexCheckoutPaymentRequest extends AbstractPaymentRequest
 {
-    const TEST = "https://ogone.test.v-psp.com/Tokenization/HostedPage";
+    const TEST = "https://test-securepay.eupayglobe.com/Tokenization/HostedPage";
 
-    const PRODUCTION = "https://secure.ogone.com/Tokenization/HostedPage";
+    const PRODUCTION = "https://securepay.eupayglobe.com/Tokenization/HostedPage";
 
     protected $payment_methods = [
         "CreditCard",
@@ -60,6 +60,23 @@ class FlexCheckoutPaymentRequest extends AbstractPaymentRequest
     public function setAliasId(Alias $alias)
     {
         $this->parameters['alias.aliasid'] = $alias->getAlias();
+
+        return $this;
+    }
+
+    /**
+     * Force saving alias
+     * @param bool $force
+     * @return $this
+     */
+    public function setForceAliasSave($force = false) {
+        if ($force) {
+            if (!isset($this->parameters['alias.aliasid'])) {
+                $this->parameters['alias.aliasid'] = '';
+            }
+
+            $this->setStorePermanently('Y');
+        }
 
         return $this;
     }
